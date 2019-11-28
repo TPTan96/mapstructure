@@ -269,6 +269,23 @@ func (d *Decoder) decode(name string, input interface{}, outVal reflect.Value) e
 		}
 	}
 
+	if data , ok :=input.(ConvertMapStruct); ok {
+		convertedInput, err := data.Convert()
+		if err != nil {
+			return fmt.Errorf("error decoding '%s': %s", name, err)
+		}
+		outVal.Set(reflect.ValueOf(convertedInput))
+		return nil
+	}
+	if dest, ok := outVal.Interface().(RevertMapStruct); ok {
+		err := dest.RevertMapStruct(input)
+		if err != nil {
+			return fmt.Errorf("error decoding '%s': %s", name, err)
+		}
+		return nil
+	}
+
+
 	var err error
 	outputKind := getKind(outVal)
 	switch outputKind {
