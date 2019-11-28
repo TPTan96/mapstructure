@@ -277,7 +277,7 @@ func (d *Decoder) decode(name string, input interface{}, outVal reflect.Value) e
 		outVal.Set(reflect.ValueOf(convertedInput))
 		return nil
 	}
-	if dest, ok := outVal.Interface().(RevertMapStruct); ok {
+	if dest, ok := outVal.Addr().Interface().(RevertMapStruct); ok {
 		err := dest.RevertMapStruct(input)
 		if err != nil {
 			return fmt.Errorf("error decoding '%s': %s", name, err)
